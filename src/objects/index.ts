@@ -4,40 +4,41 @@ import { meshStandardMaterial, meshBasicMaterial, textMaterial } from "../materi
 
 // SPHERE
 const sphere = new Mesh(
-  new SphereGeometry(1, 64, 64),
+  new SphereGeometry(.5, 32, 32),
   meshStandardMaterial,
 );
-sphere.position.x = -1.2;
-sphere.geometry.setAttribute(
-  'uv2',
-  new BufferAttribute(sphere.geometry.attributes.uv.array, 2)
-);
+sphere.position.x = -1.5;
+// sphere.geometry.setAttribute(
+//   'uv2',
+//   new BufferAttribute(sphere.geometry.attributes.uv.array, 2)
+// );
 
 // PLANE
 const plane = new Mesh(
-  new PlaneGeometry(2, 2, 100, 100),
+  new PlaneGeometry(5, 5),
   meshStandardMaterial,
 );
-plane.position.x = 1.2;
-plane.geometry.setAttribute(
-  'uv2',
-  new BufferAttribute(plane.geometry.attributes.uv.array, 2)
-);
+plane.rotation.x = - Math.PI * 0.5
+plane.position.y = - 0.65
+// plane.geometry.setAttribute(
+//   'uv2',
+//   new BufferAttribute(plane.geometry.attributes.uv.array, 2)
+// );
 
 // TORUS
 const torus = new Mesh(
-  new TorusGeometry(0.3, 0.2, 64, 120),
+  new TorusGeometry(0.3, 0.2, 32, 64),
   meshStandardMaterial,
 );
-torus.position.y = 1.5;
-torus.geometry.setAttribute(
-  'uv2',
-  new BufferAttribute(torus.geometry.attributes.uv.array, 2)
-);
+torus.position.x = 1.5;
+// torus.geometry.setAttribute(
+//   'uv2',
+//   new BufferAttribute(torus.geometry.attributes.uv.array, 2)
+// );
 
 const cube = new Mesh(
-  new BoxBufferGeometry(1, 1, 1),
-  meshBasicMaterial,
+  new BoxBufferGeometry(.75, .75, .75),
+  meshStandardMaterial,
 );
 
 /**

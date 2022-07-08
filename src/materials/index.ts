@@ -3,9 +3,12 @@ import * as THREE from 'three';
 import { doorAlphaTexture, doorAmbientOcclusionTexture, doorColorTexture, doorHeightTexture, doorMetalnessTexture, doorNormalTexture, doorRoughnessTexture, environmentMapTexture, gradientTexture, matCapTexture } from "../textures";
 import mGui from "../gui";
 
-const meshStandardMaterial = new MeshStandardMaterial();
-meshStandardMaterial.roughness = .7;
-meshStandardMaterial.metalness = .2;
+const meshStandardMaterial = new MeshStandardMaterial({
+  roughness: .4
+});
+// meshStandardMaterial.roughness = .7;
+// meshStandardMaterial.metalness = .2;
+
 // meshStandardMaterial.map = doorColorTexture;
 // meshStandardMaterial.aoMap = doorAmbientOcclusionTexture;
 // meshStandardMaterial.aoMapIntensity = 1;
@@ -17,7 +20,7 @@ meshStandardMaterial.metalness = .2;
 // meshStandardMaterial.normalScale.set(.5, .5);
 // meshStandardMaterial.alphaMap = doorAlphaTexture;
 // meshStandardMaterial.transparent = true;
-meshStandardMaterial.envMap = environmentMapTexture;
+// meshStandardMaterial.envMap = environmentMapTexture;
 
 // mGui.gui.add(meshStandardMaterial, 'metalness', 0, 1, .0001);
 // mGui.gui.add(meshStandardMaterial, 'roughness', 0, 1, .0001);

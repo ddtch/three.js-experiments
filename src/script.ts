@@ -2,8 +2,8 @@ import './style.scss';
 import gsap from 'gsap';
 import { AxesHelper, BooleanKeyframeTrack, BufferAttribute, Clock, Group, Mesh, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
-import { ambientLight, pointLight } from './lights';
-import { cube } from './objects';
+import { ambientLight, directionalLight, directionalLightHelper, hemiSphereLight, hemiSphereLightHelper, pointLight, pointLightHelper, rectAreaLight, rectAreaLightHelper, spotLight, spotLightHelper } from './lights';
+import { cube, plane, sphere, torus } from './objects';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { textMaterial } from './materials';
@@ -34,46 +34,28 @@ window.addEventListener('resize', (ev) => {
 
 // Scene
 const scene = new Scene();
-scene.add(pointLight);
-scene.add(ambientLight);
-// scene.add(cube);
+
+// scene.add(ambientLight);
+
+scene.add(directionalLight, directionalLightHelper);
+
+scene.add(hemiSphereLight, hemiSphereLightHelper);
+
+scene.add(pointLight, pointLightHelper);
+
+scene.add(rectAreaLight, rectAreaLightHelper);
+
+scene.add(spotLight, spotLightHelper);
+
+scene.add(cube, plane, torus, sphere);
 scene.add(camera);
 
+
 /**
- * Objects & Fonts
+ * Objects & Fonts & Helpers
  */
-
-const helper = new AxesHelper();
-scene.add(helper);
-
- const fLoader = new FontLoader()
- fLoader.load('../fonts/helvetiker_regular.typeface.json', (font => {
-    const textGeometry = new TextGeometry(
-        'Hello Three.js',
-        {
-            font: font,
-            size: 0.5,
-            height: 0.2,
-            curveSegments: 12,
-            bevelEnabled: true,
-            bevelThickness: 0.03,
-            bevelSize: 0.02,
-            bevelOffset: 0,
-            bevelSegments: 5
-        }
-    );
-    // textMaterial.wireframe = true;
-    // textGeometry.computeBoundingBox();
-    // textGeometry.translate(
-    //     -textGeometry.boundingBox.max.x * .5,
-    //     -textGeometry.boundingBox.max.y * .5,
-    //     -textGeometry.boundingBox.max.z * .5,
-    // );
-    textGeometry.center()
-    const text = new Mesh(textGeometry, textMaterial);
-    scene.add(text)
-
- }));
+const axisHelper = new AxesHelper();
+scene.add(axisHelper);
 
 // Renderer
 const renderer = new WebGLRenderer({
@@ -87,6 +69,17 @@ renderer.setPixelRatio(window.devicePixelRatio);
 const clock = new Clock();
 const tick = () => {    
     const elapsedTime = clock.getElapsedTime();
+
+    // Update objects
+    sphere.rotation.y = 0.1 * elapsedTime
+    cube.rotation.y = 0.1 * elapsedTime
+    torus.rotation.y = 0.1 * elapsedTime
+
+    sphere.rotation.x = 0.15 * elapsedTime
+    cube.rotation.x = 0.15 * elapsedTime
+    torus.rotation.x = 0.15 * elapsedTime
+
+    spotLightHelper.update();
 
     contorls.update();
 
