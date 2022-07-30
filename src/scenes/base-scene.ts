@@ -66,6 +66,10 @@ export default class BaseScene {
     this.camera.position.x = 4
     this.camera.position.y = 2
     this.camera.position.z = 5
+    const camFolder = this.gui.addFolder('camera');
+    camFolder.add(this.camera.position, 'x', 1, 10);
+    camFolder.add(this.camera.position, 'y', 1, 10);
+    camFolder.add(this.camera.position, 'z', 1, 10);
     
     this.renderer.setSize(sizes.width, sizes.height)
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -102,9 +106,14 @@ export default class BaseScene {
     this.controls.update()
 
     // Render
-    this.renderer.render(this.scene, this.camera)
+    this.renderer.render(this.scene, this.camera);
+    this.additionalAnimation();
 
     // Call tick again on the next frame
     window.requestAnimationFrame(() => this.tick())
+  }
+
+  public additionalAnimation () {
+
   }
 }

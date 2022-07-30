@@ -1,3 +1,8 @@
-import hountedScene from "./scenes/haunted-house-scene";
+import { Group } from "three";
+import hauntedScene from "./scenes/haunted-house-scene";
 
-hountedScene.tick();
+const {scene, sphere} = hauntedScene;
+
+// scene.remove(sphere);
+
+hauntedScene.tick();
