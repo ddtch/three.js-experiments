@@ -1,12 +1,15 @@
 import './style.scss';
 import gsap from 'gsap';
-import { AxesHelper, BooleanKeyframeTrack, BufferAttribute, Clock, Group, Mesh, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import {AxesHelper, BoxGeometry, Camera, Clock, Color, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, Scene, SphereGeometry, Vector3, WebGLRenderer } from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
-import { ambientLight, directionalLight, directionalLightHelper, hemiSphereLight, hemiSphereLightHelper, pointLight, pointLightHelper, rectAreaLight, rectAreaLightHelper, spotLight, spotLightHelper } from './lights';
-import { cube, plane, sphere, torus } from './objects';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
-import { textMaterial } from './materials';
+import { floorPlane } from './bzaar-core/objects';
+import { ambientLight } from './lights';
+import mGui from './gui';
+import { islandObject } from './bzaar-core/models';
+import { mainLight, sunHelper, sunLight } from './bzaar-core/lights';
+import {spotLight} from './lights';
+import { doorNormalTexture } from './textures';
+
 
 // Sizes
 const SIZES = {
@@ -17,9 +20,14 @@ const SIZES = {
 const canvas = document.querySelector('canvas.webgl') as HTMLElement;
 // Camera
 const aspectRation = SIZES.width / SIZES.height;
-const camera = new PerspectiveCamera(75, aspectRation, .1, 1000);
-camera.position.z = 3;
-// camera.lookAt(cube.position);
+const camera = new PerspectiveCamera(75, aspectRation, .1, 100);
+camera.position.set(0, 4, 17);
+
+const camFolder = mGui.gui.addFolder('camera');
+const camPosFolder = camFolder.addFolder('position')
+camPosFolder.add(camera.position, 'x', 0, 100, .01)
+camPosFolder.add(camera.position, 'y', 0, 100, .01)
+camPosFolder.add(camera.position, 'z', 0, 100, .01)
 // Controls
 const contorls = new OrbitControls(camera, canvas);
 contorls.enableDamping = true;
@@ -35,20 +43,39 @@ window.addEventListener('resize', (ev) => {
 // Scene
 const scene = new Scene();
 
-// scene.add(ambientLight);
-
-scene.add(directionalLight, directionalLightHelper);
-
-scene.add(hemiSphereLight, hemiSphereLightHelper);
-
-scene.add(pointLight, pointLightHelper);
-
-scene.add(rectAreaLight, rectAreaLightHelper);
-
-scene.add(spotLight, spotLightHelper);
-
-scene.add(cube, plane, torus, sphere);
+// scene.add(floorPlane);
 scene.add(camera);
+const islandFolder = mGui.gui.addFolder('island')
+const rotFold = islandFolder.addFolder('rotation');
+rotFold.add(islandObject.scene.rotation, 'x', -Math.PI * 2, Math.PI * 2, .001);
+rotFold.add(islandObject.scene.rotation, 'y', -Math.PI * 2, Math.PI * 2, .001);
+rotFold.add(islandObject.scene.rotation, 'z', -Math.PI * 2, Math.PI * 2, .001);
+const posFold = islandFolder.addFolder('positions');
+posFold.add(islandObject.scene.position, 'x', -10, 10, .01);
+posFold.add(islandObject.scene.position, 'y', -10, 10, .01);
+posFold.add(islandObject.scene.position, 'z', -10, 10, .01);
+
+islandObject.scene.rotation.set(-2.434, 0.362, -3.42);
+islandObject.scene.position.set(6.6, 2.15, -7);
+scene.add(islandObject.scene);
+const cuber = new Mesh(
+    new SphereGeometry(2),
+    new MeshStandardMaterial({
+        color: new Color('rgba(126,20,0, .5)'),
+        roughness: .7,
+        metalness: .2,
+    }),
+    );
+    
+// cuber.add(camera);
+const cf = mGui.gui.addFolder('cube');
+cf.add(cuber.position, 'x', -100, 100, .01);
+cf.add(cuber.position, 'y', -100, 100, .01);
+cf.add(cuber.position, 'z', -100, 100, .01);
+
+scene.add(cuber)
+
+scene.add(mainLight, sunLight, sunHelper);
 
 
 /**
@@ -70,17 +97,17 @@ const clock = new Clock();
 const tick = () => {    
     const elapsedTime = clock.getElapsedTime();
 
-    // Update objects
-    sphere.rotation.y = 0.1 * elapsedTime
-    cube.rotation.y = 0.1 * elapsedTime
-    torus.rotation.y = 0.1 * elapsedTime
-
-    sphere.rotation.x = 0.15 * elapsedTime
-    cube.rotation.x = 0.15 * elapsedTime
-    torus.rotation.x = 0.15 * elapsedTime
-
-    spotLightHelper.update();
-
+    // cuber.rotation.set(0, Math.sin(100), 0)
+    // cuber.position.set(Math.sin(elapsedTime), 0, 0)
+    // camera.lookAt(cuber.position);
+    // const newPosX = elapsedTime * 10;
+    // console.log(newPosX)
+    // camera.position.set(
+    //     Math.sin(elapsedTime * .9) * 20,
+    //     0,
+    //     0,
+    // )
+    
     contorls.update();
 
     renderer.render(scene, camera);
